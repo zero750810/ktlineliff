@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>回報系統</title>
+    <script src="https://static.line-scdn.net/liff/2.1/sdk.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+</head>
+<body>
+    <div id="app">
+        <h1>回報系統</h1>
+        <div id="loginSection" style="display: none;">
+            <button id="loginButton">使用 Google 登入</button>
+        </div>
+        <div id="reportSection" style="display: none;">
+            <h2>回報資料</h2>
+            <canvas id="signatureCanvas" width="300" height="150" style="border: 1px solid black;"></canvas>
+            <button id="clearButton">清除簽名</button>
+            <button id="submitButton">提交回報</button>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+    <script src="./script.js"></script>
+</body>
+</html>
