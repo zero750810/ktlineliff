@@ -39,6 +39,10 @@ async function loginWithGoogle() {
         provider: 'google',
         options: {
             redirectTo: window.location.origin, // 自動適配當前網站
+            queryParams: {
+                access_type: 'offline',
+                prompt: 'consent',
+            }
           },
     });
     if (session) {
