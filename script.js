@@ -3,16 +3,16 @@ const supabaseUrl = 'https://thzfluofcwgkwooydecd.supabase.co';
 const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRoemZsdW9mY3dna3dvb3lkZWNkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk3Nzg3MzAsImV4cCI6MjAyNTM1NDczMH0.R9SkcU1J5ohlZKxZ76y_oP8k1TF5bX0FxOQURX2JjC4';
 const supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
 // LIFF 初始化
-window.liff.ready.then(() => {
-    liff.init({ liffId: '2006746791' }).then(() => {
-        if (!liff.isLoggedIn()) {
-            liff.login();
-        } else {
-            checkJWT();
-        }
-    }).catch(console.error);
-}).catch(console.error);
-
+//liff.init({ liffId: '2006746791-q2Dj1Mgw' }).then(() => {
+ //  if (!liff.isLoggedIn()) {
+ //       console.log("not logged in");
+ //       liff.login();
+ //   } else {
+ //       console.log("logged in");
+ //       checkJWT();
+ //   }
+//}).catch(console.error);
+checkJWT();
 // 檢查 JWT
 async function checkJWT() {
     const jwt = localStorage.getItem('jwt');
@@ -37,6 +37,9 @@ async function validateJWT(jwt) {
 async function loginWithGoogle() {
     const { user, session, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
+        options: {
+            redirectTo: window.location.origin, // 自動適配當前網站
+          },
     });
     if (session) {
         localStorage.setItem('jwt', session.access_token);
