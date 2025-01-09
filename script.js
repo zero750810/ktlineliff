@@ -56,7 +56,7 @@ async function loginWithGoogle() {
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
             options: {
-                redirectTo: window.location.origin,
+                redirectTo: "https://liff.line.me/2006746791-q2Dj1Mgw",
                 skipBrowserRedirect: false, // 確保使用外部瀏覽器
                 queryParams: {
                     access_type: 'offline',
