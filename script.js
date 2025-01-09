@@ -2,6 +2,23 @@
 const supabaseUrl = 'https://thzfluofcwgkwooydecd.supabase.co';
 const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRoemZsdW9mY3dna3dvb3lkZWNkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk3Nzg3MzAsImV4cCI6MjAyNTM1NDczMH0.R9SkcU1J5ohlZKxZ76y_oP8k1TF5bX0FxOQURX2JjC4';
 const supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
+// 在頁面載入時檢查登入狀態
+window.addEventListener('load', async () => {
+    // 檢查是否有登入回調
+    const { data: { session }, error } = await supabase.auth.getSession();
+    
+    if (session) {
+        // 使用者已登入
+        localStorage.setItem('jwt', session.access_token);
+        document.getElementById('reportSection').style.display = 'block';
+        document.getElementById('loginSection').style.display = 'none';
+        fetchData(session.access_token);
+    } else {
+        // 使用者未登入
+        document.getElementById('loginSection').style.display = 'block';
+        document.getElementById('reportSection').style.display = 'none';
+    }
+});
 // LIFF 初始化
 //liff.init({ liffId: '2006746791-q2Dj1Mgw' }).then(() => {
  //  if (!liff.isLoggedIn()) {
@@ -35,19 +52,33 @@ async function validateJWT(jwt) {
 
 // 使用 Google OAuth 登入
 async function loginWithGoogle() {
-    const { user, session, error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-            redirectTo: window.location.origin, // 自動適配當前網站
-            queryParams: {
-                access_type: 'offline',
-                prompt: 'consent',
-            }
-          },
-    });
-    if (session) {
-        localStorage.setItem('jwt', session.access_token);
-        location.reload();
+    try {
+        const { data, error } = await supabase.auth.signInWithOAuth({
+            provider: 'google',
+            options: {
+                redirectTo: window.location.origin,
+                skipBrowserRedirect: false, // 確保使用外部瀏覽器
+                queryParams: {
+                    access_type: 'offline',
+                    prompt: 'consent',
+                }
+            },
+        });
+
+        if (error) {
+            console.error('登入錯誤:', error);
+            alert('登入失敗：' + error.message);
+            return;
+        }
+
+        // 登入成功後的處理
+        if (data?.session) {
+            localStorage.setItem('jwt', data.session.access_token);
+            location.reload();
+        }
+    } catch (err) {
+        console.error('發生錯誤:', err);
+        alert('發生錯誤：' + err.message);
     }
 }
 
